@@ -296,6 +296,7 @@ void CGetOAKeyDlg::GetProductKey(void)
 			SetDlgItemText(IDC_DPKSAVE,"");
 			CloseHandle(hWritePipe);
 			CloseHandle(hReadPipe);
+			delete buff;
 		}
 	}
 	else
@@ -452,4 +453,5 @@ void CGetOAKeyDlg::OnDestroy()
 #ifdef AMIFLDRV64_DLL
 	DeleteFile("amifldrv64.sys");
 #endif
+	DeleteFile("tmp.bin");
 }
