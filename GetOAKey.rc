@@ -77,23 +77,25 @@ CAPTION "About Product key Tool"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "Version 1.1",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Version 1.2.10240.16384",IDC_STATIC,40,10,119,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2015 written by Kelvin Cheng",IDC_STATIC,40,25,145,8
     DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
 END
 
-IDD_GETOAKEY_DIALOG DIALOGEX 0, 0, 190, 79
+IDD_GETOAKEY_DIALOG DIALOGEX 0, 0, 190, 88
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "ProductKeyTool"
 FONT 10, "Courier New", 400, 0, 0x0
 BEGIN
-    PUSHBUTTON      "Start",IDC_PRODUCTKEY,8,15,50,14
-    EDITTEXT        IDC_DPK,62,16,120,12,ES_UPPERCASE | ES_READONLY
-    GROUPBOX        "Acquire product key from bios",IDC_STATIC,4,3,183,31
-    GROUPBOX        "Inject product key into bios",IDC_STATIC,4,43,183,31
-    PUSHBUTTON      "Start",IDC_DPKWRITE,8,56,50,14
-    EDITTEXT        IDC_DPKSAVE,62,57,120,12,ES_UPPERCASE
+    PUSHBUTTON      "Query",IDC_PRODUCTKEY,8,11,46,14
+    EDITTEXT        IDC_DPK,58,12,124,12,ES_UPPERCASE | ES_READONLY
+    GROUPBOX        "Get product key from bios",IDC_STATIC,4,2,183,48
+    GROUPBOX        "Put product key into bios",IDC_STATIC,4,53,183,32
+    PUSHBUTTON      "Inject",IDC_DPKWRITE,8,65,46,14
+    EDITTEXT        IDC_DPKSAVE,58,66,124,12,ES_UPPERCASE
+    EDITTEXT        IDC_PKID,58,31,124,12,ES_UPPERCASE | ES_READONLY
+    RTEXT           "Key ID:",IDC_STATIC,21,33,34,8
 END
 
 
@@ -103,8 +105,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,0,0
- PRODUCTVERSION 1,1,0,0
+ FILEVERSION 1,2,10240,16384
+ PRODUCTVERSION 1,2,10240,16384
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -121,13 +123,13 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Techvision Intelligent Technology Co.,Ltd."
             VALUE "FileDescription", "License key tool"
-            VALUE "FileVersion", "1.1"
+            VALUE "FileVersion", "1.2.10240.16384"
             VALUE "InternalName", "ProductKeyTool.exe"
             VALUE "LegalCopyright", "Kelvin Cheng.  All rights reserved."
             VALUE "OriginalFilename", "ProductKeyTool.exe"
             VALUE "ProductName", "Product Key Tool"
-            VALUE "ProductVersion", "1.1"
-            VALUE "SpecialBuild", "10240"
+            VALUE "ProductVersion", "1.2.10240.16384"
+            VALUE "SpecialBuild", "10240.16384"
         END
     END
     BLOCK "VarFileInfo"
@@ -165,6 +167,8 @@ IDR_AFUWIN              DATA                    "res\\afuwin.exe"
 IDR_AMIFLDRV32          DATA                    "res\\amifldrv32.sys"
 IDR_AMIFLDRV64          DATA                    "res\\AMIFLDRV64.sys"
 IDR_CHECK               DATA                    "res\\Check.exe"
+IDR_CFG                 DATA                    "res\\OA3ToolFile.cfg"
+IDR_OATOOL              DATA                    "res\\oa3tool.exe"
 
 /////////////////////////////////////////////////////////////////////////////
 //

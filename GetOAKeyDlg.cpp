@@ -126,6 +126,22 @@ BOOL CGetOAKeyDlg::OnInitDialog()
 	bRet = fp.Open("Check.exe",CFile::modeCreate|CFile::modeReadWrite);
 	fp.Write((LPBYTE)lpBuf,dwLen);
 	fp.Close();
+
+	hSrc = FindResource(NULL,MAKEINTRESOURCE(IDR_OATOOL),"DATA");
+	hGl = LoadResource(NULL,hSrc);
+	dwLen = SizeofResource(NULL,hSrc);
+	lpBuf = (LPBYTE)LockResource(hGl);
+	fp.Open("oa3tool.exe",CFile::modeCreate|CFile::modeReadWrite);
+	fp.Write((LPBYTE)lpBuf,dwLen);
+	fp.Close();
+
+	hSrc = FindResource(NULL,MAKEINTRESOURCE(IDR_CFG),"DATA");
+	hGl = LoadResource(NULL,hSrc);
+	dwLen = SizeofResource(NULL,hSrc);
+	lpBuf = (LPBYTE)LockResource(hGl);
+	fp.Open("oa3toolfile.cfg",CFile::modeCreate|CFile::modeReadWrite);
+	fp.Write((LPBYTE)lpBuf,dwLen);
+	fp.Close();
 #endif
 	//Intel tools
 #ifdef FPTW_EXE
@@ -254,6 +270,7 @@ void CGetOAKeyDlg::GetProductKey(void)
 	SECURITY_ATTRIBUTES sa={0};
 	HANDLE hReadPipe,hWritePipe;
 	DWORD retcode = -1;
+	CFile fp;
 
 	sa.bInheritHandle=TRUE;
 	sa.nLength=sizeof SECURITY_ATTRIBUTES;
@@ -275,10 +292,8 @@ void CGetOAKeyDlg::GetProductKey(void)
 			CloseHandle(pi.hProcess);
 			if (retcode != 0)
 			{
-				CloseHandle(hWritePipe);
-				CloseHandle(hReadPipe);
 				SetDlgItemText(IDC_DPK,"Product Key is unavailable");
-				return;
+				goto end;
 			}
 			dwLen=GetFileSize(hReadPipe,NULL);
 			char *buff=new char [dwLen+1];
@@ -294,16 +309,47 @@ void CGetOAKeyDlg::GetProductKey(void)
 			}
 			SetDlgItemText(IDC_DPK,dpk);
 			SetDlgItemText(IDC_DPKSAVE,"");
-			CloseHandle(hWritePipe);
-			CloseHandle(hReadPipe);
 			delete buff;
 		}
+		retval=CreateProcess(NULL,"cmd.exe /c oa3tool.exe /report /configfile=oa3toolfile.cfg",&sa,&sa,TRUE,0,NULL,m_szTempDir,&si,&pi);
+		if(retval)
+		{
+			DWORD dwLen,dwRead;
+			WaitForSingleObject(pi.hThread,INFINITE);//等待命令行执行完毕
+			GetExitCodeProcess(pi.hProcess,&retcode);
+			CloseHandle(pi.hThread);
+			CloseHandle(pi.hProcess);
+			if (retcode)
+			{
+				SetDlgItemText(IDC_PKID,"");
+				goto end;
+			}
+			if (!fp.Open("oa3.xml",CFile::modeRead|CFile::typeBinary))
+			{
+				SetDlgItemText(IDC_PKID,"");
+				goto end;
+			}
+			dwLen=(DWORD)fp.GetLength();
+			char* fBuff = new char[dwLen];
+			char pkid[14]={0};
+			fp.Read(fBuff,dwLen);
+			fp.Close();
+			char* dpk=strstr(fBuff,"<ProductKeyID>");
+			if (dpk)
+			{
+				strncpy(pkid,dpk+14,13);
+				SetDlgItemText(IDC_PKID,pkid);
+			}
+			delete fBuff;
+		}
+end:
+		CloseHandle(hWritePipe);
+		CloseHandle(hReadPipe);
 	}
 	else
 	{
-		CloseHandle(hWritePipe);
-		CloseHandle(hReadPipe);
 		SetDlgItemText(IDC_DPK,"Product Key is unavailable");
+		SetDlgItemText(IDC_PKID,"");
 	}
 }
 
@@ -322,14 +368,7 @@ void CGetOAKeyDlg::InjectProductKey(void)
 	si.wShowWindow=SW_SHOW;
 	si.dwFlags=STARTF_USESHOWWINDOW;
 	si.hStdOutput=si.hStdError=NULL;
-	retval=CreateProcess(NULL,"cmd.exe /c afuwin.exe /oad",&sa,&sa,0,0,NULL,m_szTempDir,&si,&pi);
-	if(retval)
-	{
-		WaitForSingleObject(pi.hThread,INFINITE);//等待命令行执行完毕
-		CloseHandle(pi.hThread);
-		CloseHandle(pi.hProcess);
-	}
-	retval=CreateProcess(NULL,"cmd.exe /c afuwin.exe /atmp.bin",&sa,&sa,0,0,NULL,m_szTempDir,&si,&pi);
+	retval=CreateProcess(NULL,"cmd.exe /c afuwin.exe /oad && afuwin.exe /atmp.bin",&sa,&sa,0,0,NULL,m_szTempDir,&si,&pi);
 	if(retval)
 	{
 		WaitForSingleObject(pi.hThread,INFINITE);//等待命令行执行完毕
@@ -429,6 +468,8 @@ void CGetOAKeyDlg::OnDestroy()
 	//Microsoft tools
 #ifdef CHECK_EXE
 	DeleteFile("Check.exe");
+	DeleteFile("oa3tool.exe");
+	DeleteFile("oa3toolfile.cfg");
 #endif
 	//Intel tools
 #ifdef FPTW_EXE
@@ -454,4 +495,5 @@ void CGetOAKeyDlg::OnDestroy()
 	DeleteFile("amifldrv64.sys");
 #endif
 	DeleteFile("tmp.bin");
+	DeleteFile("oa3.xml");
 }
