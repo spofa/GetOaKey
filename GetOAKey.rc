@@ -90,8 +90,8 @@ FONT 10, "Courier New", 400, 0, 0x0
 BEGIN
     PUSHBUTTON      "Query",IDC_PRODUCTKEY,8,11,46,14
     EDITTEXT        IDC_DPK,58,12,124,12,ES_UPPERCASE | ES_READONLY
-    GROUPBOX        "Get product key from bios",IDC_STATIC,4,2,183,48
-    GROUPBOX        "Put product key into bios",IDC_STATIC,4,53,183,32
+    GROUPBOX        "Get 5*5 key from bios",IDC_STATIC,4,2,183,48
+    GROUPBOX        "Put 5*5 key into bios",IDC_STATIC,4,53,183,32
     PUSHBUTTON      "Inject",IDC_DPKWRITE,8,65,46,14
     EDITTEXT        IDC_DPKSAVE,58,66,124,12,ES_UPPERCASE
     EDITTEXT        IDC_PKID,58,31,124,12,ES_UPPERCASE | ES_READONLY
@@ -105,8 +105,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,2,10240,16384
- PRODUCTVERSION 1,2,10240,16384
+ FILEVERSION 1,3,10586,16384
+ PRODUCTVERSION 1,3,10586,16384
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -123,13 +123,13 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Techvision Intelligent Technology Co.,Ltd."
             VALUE "FileDescription", "License key tool"
-            VALUE "FileVersion", "1.2.10240.16384"
+            VALUE "FileVersion", "1.3.10586.16384"
             VALUE "InternalName", "ProductKeyTool.exe"
             VALUE "LegalCopyright", "Kelvin Cheng.  All rights reserved."
             VALUE "OriginalFilename", "ProductKeyTool.exe"
             VALUE "ProductName", "Product Key Tool"
-            VALUE "ProductVersion", "1.2.10240.16384"
-            VALUE "SpecialBuild", "10240.16384"
+            VALUE "ProductVersion", "1.3.10586.16384"
+            VALUE "SpecialBuild", "10586.16384"
         END
     END
     BLOCK "VarFileInfo"
@@ -177,7 +177,7 @@ IDR_OATOOL              DATA                    "res\\oa3tool.exe"
 
 STRINGTABLE 
 BEGIN
-    IDS_ABOUTBOX            "&About GetOA3Key..."
+    IDS_ABOUTBOX            "&About ProductKeyTool..."
 END
 
 #endif    // Chinese (P.R.C.) resources

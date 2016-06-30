@@ -368,7 +368,14 @@ void CGetOAKeyDlg::InjectProductKey(void)
 	si.wShowWindow=SW_SHOW;
 	si.dwFlags=STARTF_USESHOWWINDOW;
 	si.hStdOutput=si.hStdError=NULL;
-	retval=CreateProcess(NULL,"cmd.exe /c afuwin.exe /oad && afuwin.exe /atmp.bin",&sa,&sa,0,0,NULL,m_szTempDir,&si,&pi);
+	retval=CreateProcess(NULL,"cmd.exe /c afuwin.exe /oad",&sa,&sa,0,0,NULL,m_szTempDir,&si,&pi);
+	if(retval)
+	{
+		WaitForSingleObject(pi.hThread,INFINITE);//等待命令行执行完毕
+		CloseHandle(pi.hThread);
+		CloseHandle(pi.hProcess);
+	}
+	retval=CreateProcess(NULL,"cmd.exe /c afuwin.exe /atmp.bin",&sa,&sa,0,0,NULL,m_szTempDir,&si,&pi);
 	if(retval)
 	{
 		WaitForSingleObject(pi.hThread,INFINITE);//等待命令行执行完毕
